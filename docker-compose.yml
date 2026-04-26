@@ -1,0 +1,57 @@
+version: '3.8'
+
+services:
+  client:
+    build:
+      context: ./client
+    ports:
+      - "80:80"
+    depends_on:
+      - server
+    networks:
+      - docubrain-net
+
+  server:
+    build:
+      context: ./server
+    ports:
+      - "5000:5000"
+    environment:
+      - NODE_ENV=production
+      - PORT=5000
+      - MONGODB_URI=mongodb://mongo:27017/docubrain
+      - JWT_SECRET=docubrain_super_secret_jwt_key_2026
+      - ML_SERVICE_URL=http://ml:8000
+      - CLIENT_URL=http://localhost
+      - VECTOR_DISTANCE_THRESHOLD=1.2
+    depends_on:
+      - mongo
+      - ml
+    networks:
+      - docubrain-net
+
+  ml:
+    build:
+      context: ./ml
+    ports:
+      - "8000:8000"
+    environment:
+      - APP_NAME=docubrain-ml
+    networks:
+      - docubrain-net
+
+  mongo:
+    image: mongo:6
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - docubrain-net
+
+networks:
+  docubrain-net:
+    driver: bridge
+
+volumes:
+  mongo_data:

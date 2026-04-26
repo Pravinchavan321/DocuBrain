@@ -1,0 +1,192 @@
+.ai-bg {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  background: radial-gradient(circle at 50% 50%, #080c1d 0%, #03050d 100%);
+  z-index: 0;
+}
+
+/* ── Depth Glows ── */
+.depth-glow {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(120px);
+  opacity: 0.4;
+  animation: floatGlow 10s ease-in-out infinite alternate;
+}
+
+.depth-glow.blue {
+  width: 800px; height: 800px;
+  top: -200px; left: -200px;
+  background: radial-gradient(circle, #00d9ff 0%, transparent 70%);
+}
+
+.depth-glow.pink {
+  width: 600px; height: 600px;
+  bottom: -100px; right: -100px;
+  background: radial-gradient(circle, #ff2bd6 0%, transparent 70%);
+}
+
+.depth-glow.indigo {
+  width: 500px; height: 500px;
+  top: 30%; left: 40%;
+  background: radial-gradient(circle, #6366f1 0%, transparent 70%);
+  animation-duration: 15s;
+}
+
+/* ── Mega Brain (Zoomed) ── */
+.brain-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 1200px;
+  height: 600px;
+  transform: translate(-50%, -60%);
+  opacity: 0.25;
+  animation: brainFloat 6s ease-in-out infinite;
+}
+
+.mega-brain-svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.lobe {
+  fill: rgba(6, 182, 212, 0.05);
+  stroke: rgba(6, 182, 212, 0.4);
+  stroke-width: 2;
+  stroke-dasharray: 10 5;
+}
+
+.lobe-left { animation: dashMove 10s linear infinite; }
+.lobe-right { animation: dashMove 10s linear infinite reverse; }
+
+.path-pulse {
+  stroke: rgba(6, 182, 212, 0.3);
+  stroke-dasharray: 5 15;
+  animation: dashMove 5s linear infinite;
+}
+
+.firing-neuron {
+  filter: drop-shadow(0 0 8px #fff);
+}
+
+/* ── Circular Tech Hub (Bottom) ── */
+.tech-hub {
+  position: absolute;
+  bottom: -100px;
+  left: 50%;
+  transform: translateX(-50%) rotateX(65deg);
+  width: 800px;
+  height: 800px;
+  perspective: 1000px;
+}
+
+.hub-ring {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  border: 2px solid rgba(6, 182, 212, 0.3);
+  box-shadow: 0 0 30px rgba(6, 182, 212, 0.2), inset 0 0 30px rgba(6, 182, 212, 0.1);
+}
+
+.ring-outer {
+  width: 100%; height: 100%;
+  border-style: dashed;
+  animation: rotateHub 20s linear infinite;
+}
+
+.ring-middle {
+  width: 70%; height: 70%;
+  border-width: 4px;
+  border-color: rgba(139, 92, 246, 0.4);
+  animation: rotateHub 15s linear infinite reverse;
+}
+
+.ring-inner {
+  width: 40%; height: 40%;
+  border-width: 8px;
+  animation: rotateHub 10s linear infinite;
+}
+
+.hub-core {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 80px;
+  height: 80px;
+  transform: translate(-50%, -50%);
+  background: #00d9ff;
+  border-radius: 50%;
+  box-shadow: 0 0 100px #00d9ff, 0 0 40px #fff;
+  animation: pulseCore 2s ease-in-out infinite alternate;
+}
+
+.hub-beams {
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  transform: rotateX(-65deg); /* Counteract parent rotation */
+}
+
+.beam {
+  position: absolute;
+  bottom: 400px;
+  left: 50%;
+  width: 150px;
+  height: 600px;
+  transform: translateX(-50%);
+  background: linear-gradient(to top, rgba(0, 217, 255, 0.4), transparent);
+  clip-path: polygon(30% 100%, 70% 100%, 100% 0, 0 0);
+  filter: blur(20px);
+  animation: beamHeight 4s ease-in-out infinite;
+}
+
+.beam-left { margin-left: -200px; opacity: 0.3; height: 400px; animation-delay: -1s; }
+.beam-right { margin-left: 200px; opacity: 0.3; height: 400px; animation-delay: -2s; }
+
+/* ── Particles ── */
+.node-particle {
+  position: absolute;
+  border-radius: 50%;
+  background: #00d9ff;
+  box-shadow: 0 0 10px #00d9ff;
+  animation: floatParticle 5s ease-in-out infinite;
+}
+
+/* ── Keyframes ── */
+@keyframes brainFloat {
+  0%, 100% { transform: translate(-50%, -60%) scale(1); }
+  50% { transform: translate(-50%, -55%) scale(1.05); }
+}
+
+@keyframes rotateHub {
+  to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+@keyframes pulseCore {
+  from { transform: translate(-50%, -50%) scale(0.8); opacity: 0.6; }
+  to { transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
+}
+
+@keyframes floatGlow {
+  from { transform: scale(1) translate(0, 0); }
+  to { transform: scale(1.2) translate(50px, 50px); }
+}
+
+@keyframes dashMove {
+  to { stroke-dashoffset: 100; }
+}
+
+@keyframes beamHeight {
+  0%, 100% { height: 500px; opacity: 0.2; }
+  50% { height: 700px; opacity: 0.5; }
+}
+
+@keyframes floatParticle {
+  0%, 100% { transform: translateY(0); opacity: 0.3; }
+  50% { transform: translateY(-50px); opacity: 0.8; }
+}
