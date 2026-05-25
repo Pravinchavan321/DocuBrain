@@ -3,7 +3,7 @@
   inset: 0;
   overflow: hidden;
   pointer-events: none;
-  background: radial-gradient(circle at 50% 50%, #080c1d 0%, #03050d 100%);
+  background: radial-gradient(circle at 50% 50%, var(--bg-secondary) 0%, var(--bg-primary) 100%);
   z-index: 0;
 }
 

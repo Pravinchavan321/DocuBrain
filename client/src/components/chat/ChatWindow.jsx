@@ -1,12 +1,15 @@
 import React from 'react';
 import { useChat } from '../../context/ChatContext';
+import { useUI } from '../../context/UIContext';
 import MessageList from './MessageList';
 import ChatInput from './ChatInput';
 import StarterCards from './StarterCards';
 import ActiveContextFilterChips from './ActiveContextFilterChips';
+import PremiumThemePortalToggle from '../common/PremiumThemePortalToggle';
 
 const ChatWindow = () => {
   const { activeSessionId, messages, error, setError } = useChat();
+  const { isDark, toggleTheme } = useUI();
 
   return (
     <div className="chat-main-premium">
@@ -17,11 +20,14 @@ const ChatWindow = () => {
             <button onClick={() => setError(null)} className="text-[10px] font-black uppercase hover:underline">Dismiss</button>
           </div>
         )}
-        <button className="chat-model-pill" type="button">
-          <span className="w-2 h-2 bg-cyan-400 rounded-full animate-pulse" />
-          <span>Model 2.5 Flash</span>
-          <span className="text-[10px] opacity-50">⌄</span>
-        </button>
+        <div className="flex items-center gap-4 ml-auto">
+          <PremiumThemePortalToggle isDark={isDark} onToggle={toggleTheme} />
+          <button className="chat-model-pill" type="button">
+            <span className="w-2 h-2 bg-cyan-400 rounded-full animate-pulse" />
+            <span>Model 2.5 Flash</span>
+            <span className="text-[10px] opacity-50">⌄</span>
+          </button>
+        </div>
       </div>
 
       {!activeSessionId || messages.length === 0 ? (

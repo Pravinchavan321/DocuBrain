@@ -1,11 +1,14 @@
 import { useEffect, useRef, useState } from 'react';
 import { useLocation } from 'react-router-dom';
+import { useUI } from '../../context/UIContext';
 import AnimatedBrain3D from '../common/AnimatedBrain3D';
 import AIBrainBackground from '../backgrounds/AIBrainBackground';
+import PremiumThemePortalToggle from '../common/PremiumThemePortalToggle';
 
 const AuthLayout = ({ children, title, subtitle }) => {
   const cardRef = useRef(null);
   const location = useLocation();
+  const { isDark, toggleTheme } = useUI();
   const isRegister = location.pathname === '/register';
   
   const [tilt, setTilt] = useState({ x: 0, y: 0 });
@@ -42,28 +45,33 @@ const AuthLayout = ({ children, title, subtitle }) => {
       {/* ── DOCUBRAIN PREMIUM ANIMATED BRAIN BACKGROUND ── */}
       <AIBrainBackground />
 
-      <div className={`relative z-10 w-full max-w-[1000px] grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-0 transition-all duration-700 ease-out-expo ${isEntering ? 'opacity-0 translate-y-12' : 'opacity-100 translate-y-0'}`}>
+      {/* Local Theme Toggle for Auth Pages */}
+      <div className="absolute top-6 right-6 z-[9999] scale-90 md:scale-100 origin-top-right">
+        <PremiumThemePortalToggle isDark={isDark} onToggle={toggleTheme} />
+      </div>
+
+      <div className={`relative z-10 w-full max-w-[1100px] grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 transition-all duration-700 ease-out-expo ${isEntering ? 'opacity-0 translate-y-12' : 'opacity-100 translate-y-0'}`}>
         
         {/* ── LEFT SIDE: VISUAL SHOWCASE ── */}
-        <div className="hidden lg:flex flex-col justify-center pr-12">
+        <div className="hidden lg:flex flex-col justify-center items-start text-left pr-4">
           <div className="mb-8">
             <AnimatedBrain3D size="lg" className="mb-6 drop-shadow-2xl" />
           </div>
           <h1 className="text-5xl font-black font-display tracking-tight leading-tight mb-4 text-[var(--text-primary)]">
             Enterprise <br/>
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-500 to-cyan-400">Intelligence.</span>
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--fx-primary)] to-[var(--fx-accent)]">Intelligence.</span>
           </h1>
-          <p className="text-lg font-medium text-[var(--text-secondary)] leading-relaxed">
+          <p className="text-lg font-medium text-[var(--text-secondary)] leading-relaxed max-w-md">
             Secure, precise, and instantaneous context retrieval. Ask short prompts, get comprehensive multi-document insights.
           </p>
           <div className="mt-8 flex gap-4">
-            <div className="px-4 py-2 rounded-lg border border-[var(--border-color)] bg-[var(--card-bg)] backdrop-blur-md shadow-sm font-bold text-sm text-[var(--text-primary)]">Hybrid Search</div>
-            <div className="px-4 py-2 rounded-lg border border-[var(--border-color)] bg-[var(--card-bg)] backdrop-blur-md shadow-sm font-bold text-sm text-[var(--text-primary)]">Query Expansion</div>
+            <div className="px-4 py-2 rounded-lg border border-[var(--border-color)] bg-[var(--card-bg)] backdrop-blur-md shadow-sm font-bold text-sm text-[var(--text-primary)] hover:border-[var(--fx-primary)] transition-colors cursor-pointer">Hybrid Search</div>
+            <div className="px-4 py-2 rounded-lg border border-[var(--border-color)] bg-[var(--card-bg)] backdrop-blur-md shadow-sm font-bold text-sm text-[var(--text-primary)] hover:border-[var(--fx-accent)] transition-colors cursor-pointer">Query Expansion</div>
           </div>
         </div>
 
         {/* ── RIGHT SIDE: AUTH CARD CONTAINER ── */}
-        <div className="flex items-center justify-center">
+        <div className="flex items-center justify-center lg:justify-end pl-4 lg:pl-10">
           <div
             ref={cardRef}
             onMouseMove={handleMouseMove}

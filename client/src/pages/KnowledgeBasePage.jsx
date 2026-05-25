@@ -1,15 +1,17 @@
 import React from 'react';
 import { useDocuments } from '../context/DocumentContext';
+import { useUI } from '../context/UIContext';
 import UploadBox from '../components/knowledge/UploadBox';
 import DocumentList from '../components/knowledge/DocumentList';
 import Sidebar from '../components/chat/Sidebar';
 import KnowledgeAestheticBackground from '../components/knowledge/KnowledgeAestheticBackground';
 import ThemeTransitionOverlay from '../components/common/ThemeTransitionOverlay';
+import PremiumThemePortalToggle from '../components/common/PremiumThemePortalToggle';
 import './KnowledgePage.css';
 
 const KnowledgeBasePage = () => {
   const { documents, loading } = useDocuments();
-  const isDark = document.documentElement.classList.contains('dark');
+  const { isDark, toggleTheme } = useUI();
 
   return (
     <main className="knowledge-page-premium">
@@ -28,7 +30,8 @@ const KnowledgeBasePage = () => {
                 <p>Upload and vectorize documents to power your AI reasoning engine.</p>
               </div>
 
-              <div className="knowledge-header-actions">
+              <div className="knowledge-header-actions flex items-center gap-4">
+                <PremiumThemePortalToggle isDark={isDark} onToggle={toggleTheme} />
                 <span className="knowledge-sync-pill">● Vector Store Synced</span>
               </div>
             </header>
