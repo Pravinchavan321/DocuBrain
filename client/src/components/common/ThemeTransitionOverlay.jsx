@@ -10,7 +10,7 @@ const ThemeTransitionOverlay = ({ isDark }) => {
       const timer = setTimeout(() => {
         setIsActive(false);
         setPrevTheme(isDark);
-      }, 350); // Ultra fast duration
+      }, 150); // Ultra fast 150ms duration
       return () => clearTimeout(timer);
     }
   }, [isDark, prevTheme]);
@@ -19,20 +19,20 @@ const ThemeTransitionOverlay = ({ isDark }) => {
 
   return (
     <div className="fixed inset-0 z-[10000] pointer-events-none overflow-hidden">
-      {/* ── Ultra Fast Expanding Circle Wipe ── */}
+      {/* ── Ultra Fast GPU-Accelerated Fade Overlay ── */}
       <div 
-        className={`absolute inset-0 transition-all duration-300 ease-out ${
+        className={`absolute inset-0 ${
           isDark ? 'bg-[#020617]' : 'bg-[#fdfbff]'
         }`}
         style={{
-          clipPath: isActive ? 'circle(150% at 50% 50%)' : 'circle(0% at 50% 50%)',
-          animation: 'theme-wipe 0.35s cubic-bezier(0.19, 1, 0.22, 1) forwards'
+          animation: 'theme-fade 0.15s cubic-bezier(0.25, 1, 0.5, 1) forwards',
+          willChange: 'opacity'
         }}
       />
 
       {/* ── Instant Grid Flash ── */}
       <div 
-        className="absolute inset-0 opacity-20 animate-flash-grid" 
+        className="absolute inset-0 opacity-10 animate-flash-grid" 
         style={{
           backgroundImage: `linear-gradient(to right, var(--accent-cyan) 1px, transparent 1px), linear-gradient(to bottom, var(--accent-cyan) 1px, transparent 1px)`,
           backgroundSize: '40px 40px'
@@ -40,17 +40,17 @@ const ThemeTransitionOverlay = ({ isDark }) => {
       />
       
       <style>{`
-        @keyframes theme-wipe {
-          0% { clip-path: circle(0% at 50% 50%); }
-          100% { clip-path: circle(150% at 50% 50%); }
+        @keyframes theme-fade {
+          0% { opacity: 1; }
+          100% { opacity: 0; }
         }
         @keyframes flash-grid {
           0% { opacity: 0; }
-          40% { opacity: 0.4; }
+          30% { opacity: 0.3; }
           100% { opacity: 0; }
         }
         .animate-flash-grid {
-          animation: flash-grid 0.3s ease-out forwards;
+          animation: flash-grid 0.15s ease-out forwards;
         }
       `}</style>
     </div>

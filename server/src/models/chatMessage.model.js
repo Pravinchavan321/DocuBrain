@@ -41,6 +41,6 @@ const chatMessageSchema = new mongoose.Schema({
 // Added compound index safely isolating sorting arrays by explicit user session roots natively
 chatMessageSchema.index({ sessionId: 1, createdAt: 1 });
 chatMessageSchema.index({ sessionId: 1, userId: 1 });
-chatMessageSchema.index({ sessionId: 1, idempotencyKey: 1, role: 1 }, { unique: true, sparse: true });
+chatMessageSchema.index({ sessionId: 1, idempotencyKey: 1, role: 1 }, { unique: true, partialFilterExpression: { idempotencyKey: { $type: "string" } } });
 
 module.exports = mongoose.model('ChatMessage', chatMessageSchema);

@@ -102,12 +102,10 @@ const DashboardPage = () => {
 
   const toggleTheme = () => {
     setPortalFlash(true);
-    setTimeout(() => {
-      setIsDark(!isDark);
-    }, 100); 
+    setIsDark(!isDark);
     setTimeout(() => {
       setPortalFlash(false);
-    }, 400);
+    }, 150);
   };
 
   const stats = data?.stats || { documents: 0, chats: 0, queries: 0 };
