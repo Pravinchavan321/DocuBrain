@@ -19,15 +19,10 @@ const isRetryableError = (error) => {
 class LLMService {
   constructor() {
     this.apiKey = process.env.GEMINI_API_KEY;
-    // Use gemini-1.5-flash-latest as the primary model. 
-    // We hardcode this to 'gemini-1.5-flash-latest' to bypass potential environment variable conflicts
-    // that keep forcing the deprecated 'gemini-1.5-flash' name.
-    const primaryModel = 'gemini-1.5-flash';
-    const fallbackModel = 'gemini-2.0-flash';
+    const primaryModel = 'gemini-2.0-flash';
+    const fallbackModel = 'gemini-1.5-pro';
     
-    this.modelName = (process.env.GEMINI_MODEL && process.env.GEMINI_MODEL !== 'gemini-1.5-flash') 
-      ? process.env.GEMINI_MODEL.replace('models/', '') 
-      : primaryModel;
+    this.modelName = primaryModel;
 
     if (!this.apiKey || this.apiKey.trim() === '' || this.apiKey === 'dummy_key') {
       throw new Error("GEMINI_API_KEY is not configured");
