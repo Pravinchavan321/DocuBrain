@@ -1,8 +1,8 @@
+const { validateEnv, PORT } = require('./config/env');
 const http = require('http');
 const { Server } = require('socket.io');
 const app = require('./app');
 const logger = require('./config/logger');
-const { validateEnv, PORT } = require('./config/env');
 const connectMongo = require('./config/db.mongo');
 const initSentry = require('./config/sentry');
 

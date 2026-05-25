@@ -126,12 +126,12 @@ const UploadBox = () => {
           <div className="mt-4 flex items-center justify-between p-4 bg-indigo-500/10 border border-indigo-500/20 rounded-xl animate-in fade-in slide-in-from-top-2">
             <div className="flex items-center space-x-3 overflow-hidden">
               <div className="w-8 h-8 rounded-lg bg-indigo-500/20 flex items-center justify-center text-indigo-400">📄</div>
-              <span className="text-sm text-white font-bold truncate">{file.name}</span>
+              <span className="text-sm text-[var(--text-primary)] font-bold truncate">{file.name}</span>
             </div>
             <div className="flex space-x-3">
               <button 
                 onClick={() => setFile(null)}
-                className="text-white/40 hover:text-red-400 p-1 transition-colors"
+                className="text-[var(--text-secondary)] hover:text-red-400 p-1 transition-colors"
               >
                 Cancel
               </button>

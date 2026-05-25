@@ -90,7 +90,7 @@ const DocumentItem = ({ document }) => {
             <button 
               onClick={() => setShowConfirm(false)}
               disabled={isDeleting}
-              className="text-[10px] font-black uppercase px-3 py-1 bg-white/10 text-white rounded-lg"
+              className="text-[10px] font-black uppercase px-3 py-1 bg-white/10 text-[var(--text-primary)] rounded-lg"
             >
               No
             </button>

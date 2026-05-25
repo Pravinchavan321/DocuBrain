@@ -132,8 +132,8 @@ class QueryService {
           continue;
         }
 
-        const meta = chunkMetadatas[i] || {};
-        const safeDocumentId = meta.documentId || chunkIds[i] || "unknown";
+        const meta = chunk.meta || {};
+        const safeDocumentId = chunk.documentId || meta.documentId || chunk.id || "unknown";
         
         if (validDocIds.size > 0 && !validDocIds.has(safeDocumentId.toString())) {
           continue;
