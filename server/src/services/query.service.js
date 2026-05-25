@@ -5,12 +5,13 @@ const logger = require('../config/logger');
 class QueryService {
   async processQuery(queryText, options = {}, userId = null) {
     try {
-      const { documentIds, topK, minScore, includeSources, includeChunks } = options || {};
+      const { documentIds, topK, minScore, includeSources, includeChunks, hybridMode } = options || {};
       
       const safeTopK = Math.min(Math.max(Number(topK) || 5, 1), 10);
       const safeMinScore = isNaN(Number(minScore)) ? 0.1 : Math.min(Math.max(Number(minScore), 0), 1);
       const isIncludeSources = includeSources !== false;
       const isIncludeChunks = includeChunks !== false;
+      const isHybridMode = hybridMode !== false; // Default to true if not explicitly false
 
       let validDocIds = new Set();
       if (documentIds && Array.isArray(documentIds) && documentIds.length > 0) {
@@ -27,27 +28,85 @@ class QueryService {
         logger.info('No specific documentIds selected, searching across all available knowledge.');
       }
 
-      logger.info(`Sending query to ML service: "${queryText}"`);
-      const mlResponse = await mlService.queryVector(queryText);
+      // Hybrid Search: BM25 (Keyword)
+      let keywordBoostMap = new Map();
+      if (isHybridMode) {
+        try {
+          const Document = require('../models/document.model');
+          const keywordDocs = await Document.find(
+            { $text: { $search: queryText } },
+            { score: { $meta: "textScore" } }
+          ).limit(20).lean();
+          
+          keywordDocs.forEach(doc => {
+            // Normalize textScore to a boost factor between 0.1 and 0.3
+            const boost = Math.min(doc.score * 0.05, 0.3);
+            keywordBoostMap.set(doc._id.toString(), boost);
+          });
+          logger.info(`Hybrid Search: Found ${keywordDocs.length} keyword matches for boosting.`);
+        } catch (e) {
+          logger.warn(`Hybrid BM25 keyword search failed (index might not exist): ${e.message}`);
+        }
+      }
+
+      logger.info(`Expanding query via LLM: "${queryText}"`);
+      const expandedQueries = await llmService.generateExpandedQueries(queryText);
+      const allQueries = [queryText, ...expandedQueries.filter(q => q.toLowerCase() !== queryText.toLowerCase())];
+      logger.info(`Generated ${allQueries.length} total queries for vector search.`);
+
+      // Execute all queries in parallel
+      const mlResponses = await Promise.all(allQueries.map(q => mlService.queryVector(q)));
       
-      const results = mlResponse?.data?.results;
+      let rawChunks = [];
+      const seenChunkIdsForDedupe = new Set();
+
+      for (const mlResponse of mlResponses) {
+        const results = mlResponse?.data?.results;
+        if (!results || !Array.isArray(results.documents) || results.documents.length === 0 || !Array.isArray(results.documents[0])) {
+          continue;
+        }
+
+        const chunkTexts = results.documents[0] || [];
+        const chunkMetadatas = results.metadatas?.[0] || [];
+        const chunkIds = results.ids?.[0] || [];
+        const chunkDistances = results.distances?.[0] || [];
+
+        for (let i = 0; i < chunkTexts.length; i++) {
+          const id = chunkIds[i];
+          if (!id || seenChunkIdsForDedupe.has(id)) continue;
+          seenChunkIdsForDedupe.add(id);
+
+          rawChunks.push({
+            text: chunkTexts[i],
+            distance: chunkDistances[i],
+            meta: chunkMetadatas[i] || {},
+            id: id
+          });
+        }
+      }
       
-      if (!results || !Array.isArray(results.documents) || results.documents.length === 0 || !Array.isArray(results.documents[0]) || results.documents[0].length === 0) {
-        logger.warn('No valid results found in vector store or malformed ML response received.');
+      if (rawChunks.length === 0) {
+        logger.warn('No valid results found in vector store across all queries.');
         const fallbackAnswer = await llmService.generateAnswer({ query: queryText, context: "" });
         return {
           answer: fallbackAnswer || "I couldn't find an answer.",
           sources: [],
-          retrieval: { topK: safeTopK, minScore: safeMinScore, totalRetrieved: 0, documentsUsed: 0, confidence: 0 }
+          retrieval: { topK: safeTopK, minScore: safeMinScore, totalRetrieved: 0, documentsUsed: 0, confidence: 0, hybrid: isHybridMode }
         };
       }
 
-      const chunkTexts = results.documents[0];
-      const chunkMetadatas = results.metadatas?.[0] || [];
-      const chunkIds = results.ids?.[0] || [];
-      const chunkDistances = results.distances?.[0] || [];
-
-      const threshold = parseFloat(process.env.VECTOR_DISTANCE_THRESHOLD || '1.2');
+      // Score, Boost, and Sort
+      const scoredChunks = rawChunks.map(chunk => {
+        let baseScore = chunk.distance !== undefined ? Math.max(0, 1 - (chunk.distance / 2)) : 0;
+        const safeDocumentId = chunk.meta.documentId || chunk.id || "unknown";
+        
+        let hybridBoost = 0;
+        if (isHybridMode && keywordBoostMap.has(safeDocumentId.toString())) {
+          hybridBoost = keywordBoostMap.get(safeDocumentId.toString());
+        }
+        
+        return { ...chunk, score: baseScore + hybridBoost, documentId: safeDocumentId };
+      }).sort((a, b) => b.score - a.score);
 
       let context = "";
       const sources = [];
@@ -58,16 +117,14 @@ class QueryService {
       let totalScore = 0;
       let highestScore = 0;
 
-      for (let i = 0; i < chunkTexts.length; i++) {
-        const text = chunkTexts[i];
+      for (let i = 0; i < scoredChunks.length; i++) {
+        const chunk = scoredChunks[i];
+        const text = chunk.text;
         
-        if (text == null || typeof text !== 'string' || !text.trim()) {
-           continue; 
-        }
+        if (text == null || typeof text !== 'string' || !text.trim()) continue; 
 
         const cleanText = text.trim();
-        const distance = chunkDistances[i];
-        const score = distance !== undefined ? Math.max(0, 1 - (distance / 2)) : 0;
+        const score = chunk.score;
         
         if (score > highestScore) highestScore = score;
 
@@ -142,9 +199,13 @@ class QueryService {
         context: context.trim()
       });
 
+      // Generate Follow-up Questions in background (non-blocking for now, or await if preferred)
+      const followUpQuestions = await llmService.generateFollowUpQuestions({ query: queryText, answer: answer });
+
       return {
         answer: answer || "I couldn't find an answer.",
         sources,
+        followUpQuestions,
         retrieval: {
           topK: safeTopK,
           minScore: safeMinScore,

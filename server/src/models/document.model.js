@@ -48,4 +48,6 @@ const documentSchema = new mongoose.Schema({
   timestamps: true
 });
 
+documentSchema.index({ extractedText: 'text', originalName: 'text', fileName: 'text' }, { weights: { originalName: 10, extractedText: 1 } });
+
 module.exports = mongoose.model('Document', documentSchema);

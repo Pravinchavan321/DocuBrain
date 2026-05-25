@@ -28,18 +28,30 @@ const MarkdownText = ({ content }) => {
         }
 
         // Handle Inline Formatting
-        // Split by newlines and handle bold/inline-code
+        // Split by newlines and handle bold/inline-code/sources
         return part.split('\n').map((line, lineIdx) => {
           if (!line.trim() && lineIdx !== 0) return <div key={`br-${lineIdx}`} className="h-2" />;
           
           return (
             <p key={`line-${lineIdx}`} className="leading-relaxed">
-              {line.split(/(\*\*.*?\*\*|`.*?`)/g).map((segment, segIdx) => {
+              {line.split(/(\*\*.*?\*\*|`.*?`|\[Source \d+\])/g).map((segment, segIdx) => {
                 if (segment.startsWith('**') && segment.endsWith('**')) {
                   return <strong key={segIdx} className="font-black text-indigo-600 dark:text-indigo-400">{segment.slice(2, -2)}</strong>;
                 }
                 if (segment.startsWith('`') && segment.endsWith('`')) {
                   return <code key={segIdx} className="bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded-lg text-indigo-600 dark:text-indigo-400 font-mono text-[0.9em] border border-slate-200 dark:border-slate-700">{segment.slice(1, -1)}</code>;
+                }
+                if (segment.match(/^\[Source \d+\]$/)) {
+                  const sourceIndex = parseInt(segment.match(/\d+/)[0], 10);
+                  return (
+                    <button 
+                      key={segIdx}
+                      onClick={() => window.dispatchEvent(new CustomEvent('open-source-modal', { detail: { sourceIndex } }))}
+                      className="inline-flex items-center justify-center px-1.5 py-0.5 mx-0.5 rounded text-[10px] font-bold bg-cyan-500/20 text-cyan-400 hover:bg-cyan-500/40 transition-colors border border-cyan-500/30 cursor-pointer align-baseline"
+                    >
+                      {sourceIndex}
+                    </button>
+                  );
                 }
                 return segment;
               })}

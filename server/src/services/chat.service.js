@@ -212,6 +212,7 @@ class ChatService {
       ragResponse.answer = successfulResponse.answer;
       ragResponse.sources = successfulResponse.sources;
       ragResponse.retrieval = successfulResponse.retrieval;
+      ragResponse.followUpQuestions = successfulResponse.followUpQuestions;
     } catch (error) {
       ragWarnings.push("Intelligence retrieval was limited for this response.");
       logger.error(`RAG failure: ${error.message}`);
@@ -240,6 +241,7 @@ class ChatService {
         sources: ragResponse.sources || [],
         metadata: { 
           retrieval: ragResponse.retrieval,
+          followUpQuestions: ragResponse.followUpQuestions || [],
           model: safeModel,
           requestedModel: model,
           quickAction: mode,

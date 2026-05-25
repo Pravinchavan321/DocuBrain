@@ -27,34 +27,30 @@ export const ChatProvider = ({ children }) => {
   });
 
   const getActiveSettings = useCallback(() => {
-    if (!activeSessionId) return {
+    const key = activeSessionId || 'default';
+    return ragSettingsBySession[key] || {
       selectedDocumentIds: [],
       topK: 5,
       minScore: 0.1,
       includeSources: true,
-      includeChunks: true
-    };
-    return ragSettingsBySession[activeSessionId] || {
-      selectedDocumentIds: [],
-      topK: 5,
-      minScore: 0.1,
-      includeSources: true,
-      includeChunks: true
+      includeChunks: true,
+      hybridMode: true
     };
   }, [activeSessionId, ragSettingsBySession]);
 
   const updateRagSettings = useCallback((updates) => {
-    if (!activeSessionId) return;
+    const key = activeSessionId || 'default';
     setRagSettingsBySession(prev => {
       const updated = {
         ...prev,
-        [activeSessionId]: {
-          ...(prev[activeSessionId] || {
+        [key]: {
+          ...(prev[key] || {
             selectedDocumentIds: [],
             topK: 5,
             minScore: 0.1,
             includeSources: true,
-            includeChunks: true
+            includeChunks: true,
+            hybridMode: true
           }),
           ...updates
         }
@@ -143,7 +139,8 @@ export const ChatProvider = ({ children }) => {
       topK: Number(currentSettings.topK),
       minScore: Number(currentSettings.minScore),
       includeSources: Boolean(currentSettings.includeSources),
-      includeChunks: Boolean(currentSettings.includeChunks)
+      includeChunks: Boolean(currentSettings.includeChunks),
+      hybridMode: Boolean(currentSettings.hybridMode)
     };
 
     try {

@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useCallback } from 'react';
+import React, { createContext, useContext, useState, useCallback, useEffect } from 'react';
 
 const UIContext = createContext();
 
@@ -6,6 +6,31 @@ export const useUI = () => useContext(UIContext);
 
 export const UIProvider = ({ children }) => {
   const [toast, setToast] = useState(null);
+  
+  // Theme state
+  const [isDark, setIsDark] = useState(() => {
+    return localStorage.getItem('theme') === 'dark' || 
+      (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches);
+  });
+  const [portalFlash, setPortalFlash] = useState(false);
+
+  useEffect(() => {
+    if (isDark) {
+      document.documentElement.classList.add('dark');
+      localStorage.setItem('theme', 'dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+      localStorage.setItem('theme', 'light');
+    }
+  }, [isDark]);
+
+  const toggleTheme = useCallback(() => {
+    setPortalFlash(true);
+    setIsDark(prev => !prev);
+    setTimeout(() => {
+      setPortalFlash(false);
+    }, 150);
+  }, []);
 
   const showToast = useCallback((message, type = 'success') => {
     setToast({ message, type });
@@ -13,8 +38,9 @@ export const UIProvider = ({ children }) => {
   }, []);
 
   return (
-    <UIContext.Provider value={{ showToast }}>
+    <UIContext.Provider value={{ showToast, isDark, toggleTheme, portalFlash }}>
       {children}
+      {portalFlash && <div className="fixed inset-0 z-[9999] portal-flash pointer-events-none" />}
       {toast && (
         <div className={`fixed bottom-8 right-8 px-6 py-3 rounded-2xl shadow-2xl z-[1000] animate-fade-in flex items-center gap-3 border ${
           toast.type === 'error' 

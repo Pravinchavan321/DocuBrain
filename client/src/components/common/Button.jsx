@@ -68,7 +68,7 @@ const Button = ({ children, type = 'button', onClick, disabled = false, styleTyp
       type={type}
       onClick={onClick}
       disabled={disabled}
-      className={`relative inline-flex items-center justify-center gap-3 px-8 py-4.5 rounded-2xl font-black text-[11px] uppercase tracking-[0.25em] cursor-pointer overflow-hidden transition-all duration-300 active:scale-[0.97] active:translate-y-[1px] disabled:opacity-40 disabled:cursor-not-allowed ${widthClass}`}
+      className={`relative inline-flex items-center justify-center gap-3 px-8 py-4 rounded-2xl font-bold font-display text-sm md:text-base uppercase tracking-wider cursor-pointer overflow-hidden transition-all duration-300 active:scale-[0.97] active:translate-y-[1px] disabled:opacity-40 disabled:cursor-not-allowed ${widthClass}`}
       style={{
         ...current,
         color: '#fff',

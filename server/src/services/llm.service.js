@@ -87,6 +87,67 @@ Answer:`;
       }
     }
   }
+  async generateExpandedQueries(query) {
+    const prompt = `You are an AI assistant designed to optimize search queries for a vector database.
+The user provided the following short search prompt: "${query}"
+
+Generate 3 alternative, expanded search queries that capture the likely intent behind this prompt. 
+For example, if the prompt is "revenue", expanded queries might be "What was the total revenue?", "financial performance and revenue breakdown", etc.
+Return ONLY a JSON array of strings, with no other text, markdown, or explanation.
+Example format:
+["query 1", "query 2", "query 3"]
+`;
+
+    try {
+      const result = await this.model.generateContent(prompt);
+      const responseText = (await result.response).text().trim();
+      let queries = [];
+      try {
+        // Strip markdown backticks if any
+        const cleaned = responseText.replace(/^```json/i, '').replace(/^```/i, '').replace(/```$/i, '').trim();
+        queries = JSON.parse(cleaned);
+      } catch (e) {
+        logger.warn(`Failed to parse expanded queries as JSON: ${responseText}`);
+      }
+      if (Array.isArray(queries) && queries.length > 0) {
+        return queries;
+      }
+      return [query];
+    } catch (error) {
+      logger.warn(`LLM Expansion failed, falling back to original query: ${error.message}`);
+      return [query];
+    }
+  }
+
+  async generateFollowUpQuestions({ query, answer }) {
+    const prompt = `You are an AI assistant. Based on the user's question and your answer, suggest 3 logical follow-up questions the user might want to ask next.
+User Question: "${query}"
+Your Answer: "${answer.substring(0, 500)}..."
+
+Return ONLY a JSON array of 3 strings. No markdown, no extra text.
+Example format:
+["Question 1?", "Question 2?", "Question 3?"]
+`;
+
+    try {
+      const result = await this.model.generateContent(prompt);
+      const responseText = (await result.response).text().trim();
+      let questions = [];
+      try {
+        const cleaned = responseText.replace(/^```json/i, '').replace(/^```/i, '').replace(/```$/i, '').trim();
+        questions = JSON.parse(cleaned);
+      } catch (e) {
+        logger.warn(`Failed to parse follow-up questions as JSON: ${responseText}`);
+      }
+      if (Array.isArray(questions) && questions.length > 0) {
+        return questions.slice(0, 3);
+      }
+      return [];
+    } catch (error) {
+      logger.warn(`Follow-up generation failed: ${error.message}`);
+      return [];
+    }
+  }
 }
 
 module.exports = new LLMService();

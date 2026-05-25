@@ -2,6 +2,8 @@ import React from 'react';
 import { useChat } from '../../context/ChatContext';
 import MessageList from './MessageList';
 import ChatInput from './ChatInput';
+import StarterCards from './StarterCards';
+import ActiveContextFilterChips from './ActiveContextFilterChips';
 
 const ChatWindow = () => {
   const { activeSessionId, messages, error, setError } = useChat();
@@ -25,26 +27,20 @@ const ChatWindow = () => {
       {!activeSessionId || messages.length === 0 ? (
         <div className="chat-empty-center">
           <div className="chat-hero-panel">
-            <h1 className="chat-hero-title">What’s on your mind today?</h1>
+            <h1 className="chat-hero-title font-display text-transparent bg-clip-text bg-gradient-to-r from-white to-white/70">What’s on your mind today?</h1>
+            <ActiveContextFilterChips />
             <ChatInput variant="hero" />
-            <div className="chat-quick-actions">
-              <button className="chat-quick-pill">✦ AI script writer</button>
-              <button className="chat-quick-pill">✦ Coding Assistant</button>
-              <button className="chat-quick-pill">✦ Essay writer</button>
-              <button className="chat-quick-pill">✦ Business</button>
-              <button className="chat-quick-pill">✦ Translate</button>
-              <button className="chat-quick-pill">✦ YouTube summaries</button>
-              <button className="chat-quick-pill">✦ AI Email writing</button>
-              <button className="chat-quick-pill">✦ AI pdf chat</button>
-              <button className="chat-quick-pill">✦ Research assistant</button>
-            </div>
+            <StarterCards />
           </div>
         </div>
       ) : (
         <div className="chat-messages-layout">
           <MessageList />
-          <div className="mt-auto pt-6">
-            <ChatInput />
+          <div className="mt-auto pt-6 flex flex-col items-center">
+            <div className="w-full max-w-4xl mx-auto flex flex-col">
+              <ActiveContextFilterChips />
+              <ChatInput />
+            </div>
           </div>
         </div>
       )}
