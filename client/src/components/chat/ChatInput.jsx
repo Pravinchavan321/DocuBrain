@@ -137,8 +137,8 @@ const ChatInput = ({ variant = 'default' }) => {
     <form className="chat-composer-premium relative" onSubmit={handleSubmit}>
       {/* ── Autocomplete Dropdown ── */}
       {showSuggestions && currentSuggestions.length > 0 && (
-        <div className="absolute bottom-full left-0 mb-2 w-full bg-[#0f172a]/95 border border-white/10 rounded-xl shadow-2xl backdrop-blur-xl overflow-hidden z-50 animate-fade-in-up">
-          <div className="px-3 py-2 text-[10px] font-black uppercase tracking-widest text-white/40 border-b border-white/5">
+        <div className="absolute bottom-full left-0 mb-2 w-full bg-[var(--card-bg)] border border-[var(--border-color)] rounded-xl shadow-2xl backdrop-blur-xl overflow-hidden z-50 animate-fade-in-up">
+          <div className="px-3 py-2 text-[10px] font-black uppercase tracking-widest text-[var(--text-secondary)] border-b border-[var(--border-color)]">
             Suggestions
           </div>
           <div className="p-1">
@@ -148,10 +148,10 @@ const ChatInput = ({ variant = 'default' }) => {
                 type="button"
                 onClick={() => applySuggestion(suggestion)}
                 className={`w-full text-left px-3 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-2 ${
-                  idx === selectedIndex ? 'bg-cyan-500/20 text-cyan-200' : 'text-white/80 hover:bg-white/5'
+                  idx === selectedIndex ? 'bg-cyan-500/20 text-cyan-500' : 'text-[var(--text-primary)] hover:bg-[var(--border-color)]'
                 }`}
               >
-                <span className="opacity-50">↳</span>
+                <span className="opacity-50 text-[var(--text-secondary)]">↳</span>
                 {suggestion}
               </button>
             ))}

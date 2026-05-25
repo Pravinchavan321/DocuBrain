@@ -63,15 +63,15 @@ const MessageItem = React.memo(({ message }) => {
 
       {/* Interactive Citation Modal */}
       {activeSource && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200" onClick={() => setActiveModalSourceIndex(null)}>
-          <div className="bg-[#0f172a] border border-white/10 rounded-2xl shadow-2xl max-w-2xl w-full overflow-hidden animate-in zoom-in-95 duration-200" onClick={(e) => e.stopPropagation()}>
-            <div className="flex items-center justify-between px-5 py-4 border-b border-white/10 bg-white/5">
-              <h3 className="font-display font-semibold text-lg text-white">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200" onClick={() => setActiveModalSourceIndex(null)}>
+          <div className="bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-2xl shadow-2xl max-w-2xl w-full overflow-hidden animate-in zoom-in-95 duration-200" onClick={(e) => e.stopPropagation()}>
+            <div className="flex items-center justify-between px-5 py-4 border-b border-[var(--border-color)] bg-[var(--card-bg)]">
+              <h3 className="font-display font-semibold text-lg text-[var(--text-primary)]">
                 Citation Context
               </h3>
               <button 
                 onClick={() => setActiveModalSourceIndex(null)}
-                className="text-white/50 hover:text-white transition-colors"
+                className="text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors"
               >
                 <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -81,21 +81,21 @@ const MessageItem = React.memo(({ message }) => {
             
             <div className="p-5">
               <div className="flex items-center gap-2 mb-4">
-                <span className="bg-cyan-500/20 text-cyan-400 text-xs font-bold px-2 py-1 rounded">
+                <span className="bg-cyan-500/20 text-cyan-500 text-xs font-bold px-2 py-1 rounded">
                   Source {activeModalSourceIndex}
                 </span>
-                <span className="text-sm font-medium text-white/90 truncate">
+                <span className="text-sm font-medium text-[var(--text-primary)] truncate">
                   {activeSource.title || activeSource.filename || "Unknown Document"}
                 </span>
               </div>
               
-              <div className="bg-black/30 rounded-xl p-4 border border-white/5 max-h-[60vh] overflow-y-auto custom-scrollbar">
-                <p className="text-sm text-white/80 leading-relaxed font-mono">
+              <div className="bg-[var(--card-bg)] rounded-xl p-4 border border-[var(--border-color)] max-h-[60vh] overflow-y-auto custom-scrollbar">
+                <p className="text-sm text-[var(--text-secondary)] leading-relaxed font-mono">
                   {activeSource.preview || "No preview available for this source."}
                 </p>
               </div>
               
-              <div className="mt-4 flex justify-between items-center text-xs text-white/40 font-semibold tracking-wider uppercase">
+              <div className="mt-4 flex justify-between items-center text-xs text-[var(--text-secondary)] font-semibold tracking-wider uppercase">
                 <span>Confidence Score: {activeSource.score ? activeSource.score : "N/A"}</span>
                 <span>Document ID: {activeSource.documentId ? activeSource.documentId.substring(0, 8) + '...' : "N/A"}</span>
               </div>
