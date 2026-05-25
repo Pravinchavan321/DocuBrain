@@ -125,8 +125,8 @@ const AnimatedProjectBackground = ({ variant = 'dashboard' }) => {
         <div className="absolute inset-x-0 h-[300px] bg-gradient-to-b from-transparent via-[var(--accent-cyan)] to-transparent animate-scanner-sweep" style={{ animationDuration: '12s' }} />
       </div>
 
-      {/* ── Layer 7: Noise Texture ── */}
-      <div className="absolute inset-0 opacity-[0.02] mix-blend-overlay pointer-events-none bg-[url('https://grainy-gradients.vercel.app/noise.svg')]" />
+      {/* ── Texture Overlay ── */}
+      <div className="absolute inset-0 opacity-[0.02] mix-blend-overlay pointer-events-none" />
     </div>
   );
 };

@@ -63,8 +63,6 @@
 .chat-bg-vignette {
   position: absolute;
   inset: 0;
-  background:
-    radial-gradient(circle at center, transparent 0%, rgba(0,0,0,0.22) 60%, rgba(0,0,0,0.72) 100%);
 }
 
 @keyframes chatOrbFloat {

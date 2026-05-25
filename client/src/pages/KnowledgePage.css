@@ -1,7 +1,7 @@
 .knowledge-page-premium {
   position: relative;
   min-height: 100vh;
-  color: #f8fafc;
+  color: var(--text-primary);
   overflow-x: hidden;
 }
 
@@ -35,7 +35,7 @@
   line-height: 0.98;
   letter-spacing: -0.065em;
   font-weight: 900;
-  color: #ffffff;
+  color: var(--text-primary);
 }
 
 .knowledge-header p:last-child {
@@ -120,13 +120,13 @@
   font-size: 25px;
   line-height: 1;
   letter-spacing: -0.04em;
-  color: #ffffff;
+  color: var(--text-primary);
   margin-bottom: 7px;
 }
 
 .knowledge-stat-card span {
   display: block;
-  color: rgba(226,232,240,0.62);
+  color: var(--text-secondary);
   font-size: 13px;
 }
 
@@ -148,7 +148,7 @@
   border-radius: 28px;
   border: 1px solid rgba(255,255,255,0.12);
   background:
-    linear-gradient(145deg, rgba(15, 23, 42, 0.78), rgba(2, 6, 23, 0.62));
+    var(--card-bg);
   box-shadow:
     0 24px 70px rgba(0,0,0,0.34),
     inset 0 1px 0 rgba(255,255,255,0.08);
@@ -181,14 +181,14 @@
 
 .knowledge-section-title-row h2 {
   margin: 0;
-  color: #ffffff;
+  color: var(--text-primary);
   font-size: 18px;
   letter-spacing: -0.035em;
 }
 
 .knowledge-section-title-row p {
   margin: 6px 0 0;
-  color: rgba(226,232,240,0.58);
+  color: var(--text-secondary);
   font-size: 13px;
 }
 
@@ -233,7 +233,7 @@
 
 .knowledge-upload-title {
   margin: 0 0 8px;
-  color: #ffffff;
+  color: var(--text-primary);
   font-size: 18px;
   font-weight: 850;
   letter-spacing: -0.035em;
@@ -241,7 +241,7 @@
 
 .knowledge-upload-subtitle {
   margin: 0 auto 18px;
-  color: rgba(226,232,240,0.62);
+  color: var(--text-secondary);
   max-width: 520px;
   line-height: 1.55;
   font-size: 14px;
@@ -267,7 +267,7 @@
 
 .knowledge-file-types {
   margin-top: 14px;
-  color: rgba(226,232,240,0.48);
+  color: var(--text-secondary);
   font-size: 12px;
 }
 
@@ -325,14 +325,14 @@
 
 .knowledge-empty-state h3 {
   margin: 0 0 8px;
-  color: #ffffff;
+  color: var(--text-primary);
   font-size: 17px;
   letter-spacing: -0.03em;
 }
 
 .knowledge-empty-state p {
   margin: 0;
-  color: rgba(226,232,240,0.58);
+  color: var(--text-secondary);
   font-size: 13px;
 }
 
@@ -374,7 +374,7 @@
 
 .knowledge-doc-main strong {
   display: block;
-  color: #ffffff;
+  color: var(--text-primary);
   font-size: 14px;
   overflow: hidden;
   white-space: nowrap;
@@ -384,7 +384,7 @@
 .knowledge-doc-main span {
   display: block;
   margin-top: 4px;
-  color: rgba(226,232,240,0.5);
+  color: var(--text-secondary);
   font-size: 12px;
 }
 
@@ -414,7 +414,7 @@
   border-radius: 24px;
   border: 1px solid rgba(255,255,255,0.11);
   background:
-    linear-gradient(145deg, rgba(15,23,42,0.72), rgba(2,6,23,0.58));
+    var(--card-bg);
   box-shadow: 0 24px 60px rgba(0,0,0,0.28);
   backdrop-filter: blur(20px);
   padding: 20px;
@@ -422,7 +422,7 @@
 
 .knowledge-info-card h3 {
   margin: 0 0 12px;
-  color: #ffffff;
+  color: var(--text-primary);
   font-size: 16px;
   letter-spacing: -0.03em;
 }
@@ -460,7 +460,7 @@
 .knowledge-pipeline-step span {
   display: block;
   margin-top: 3px;
-  color: rgba(226,232,240,0.5);
+  color: var(--text-secondary);
   font-size: 12px;
   line-height: 1.4;
 }

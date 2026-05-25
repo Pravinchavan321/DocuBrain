@@ -56,7 +56,7 @@ const PremiumThemePortalToggle = ({ isDark, onToggle }) => {
         
         {/* ── Liquid Portal Knob ── */}
         <div 
-          className={`relative z-10 w-8 h-8 flex items-center justify-center transition-all duration-300 transform-gpu ease-in-out ${
+          className={`relative z-10 w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 transform-gpu ease-in-out ${
             isDark ? 'translate-x-10' : 'translate-x-0'
           } ${isLiquid ? 'scale-x-[2] scale-y-[0.5] blur-[1px]' : 'scale-100 blur-0'} ${!isLiquid ? 'animate-liquid' : ''}`}
           style={{
