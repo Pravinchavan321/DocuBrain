@@ -334,7 +334,8 @@
 }
 
 .chat-tool-btn:hover {
-  background: var(--border-color);\n  filter: brightness(0.9);
+  background: var(--border-color);
+  filter: brightness(0.9);
   color: var(--text-primary);
 }
 
@@ -387,7 +388,8 @@
 }
 
 .chat-quick-pill:hover {
-  background: var(--border-color);\n  filter: brightness(0.9);
+  background: var(--border-color);
+  filter: brightness(0.9);
   transform: translateY(-1px);
 }
 
